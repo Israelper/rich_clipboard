@@ -38,8 +38,7 @@ class Win32Clipboard {
     int formatId = NULL;
     using((arena) {
       final formatStringUnits = name.codeUnits;
-      final formatStringPtr = arena
-          .allocate<Uint16>(sizeOf<Uint16>() * (formatStringUnits.length + 1));
+      final formatStringPtr = arena.allocate<Uint16>(sizeOf<Uint16>() * (formatStringUnits.length + 1));
       for (var i = 0; i < formatStringUnits.length; i++) {
         formatStringPtr[i] = formatStringUnits[i];
       }
@@ -62,8 +61,7 @@ class Win32Clipboard {
 
       while (currentFormat != 0) {
         nameBuffer.elementAt(0).cast<Uint16>().value = NULL;
-        GetClipboardFormatName(
-            currentFormat, nameBuffer.cast<Utf16>(), maxChars);
+        GetClipboardFormatName(currentFormat, nameBuffer.cast<Utf16>(), maxChars);
         String? nameString = nameBuffer.cast<Utf16>().toDartString();
         if (nameString.isEmpty) {
           nameString = _win32CfToStrFallback[currentFormat];
@@ -88,6 +86,7 @@ class Win32Clipboard {
       return null;
     }
 
+// Here craash
     final rawPtr = GlobalLock(handle);
     if (rawPtr == nullptr) {
       GlobalUnlock(handle);
@@ -112,8 +111,7 @@ class Win32Clipboard {
   /// Write the provided string to the clipboard.
   ///
   /// You must already have opened the clipboard with [Win32Clipboard.open].
-  void setString(int format, String string,
-      {encoding = ClipboardEncoding.utf16}) {
+  void setString(int format, String string, {encoding = ClipboardEncoding.utf16}) {
     late final List<int> units;
     switch (encoding) {
       case ClipboardEncoding.utf16:
